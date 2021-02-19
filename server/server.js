@@ -2,19 +2,23 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const http = require('http');
-const httpProxy = require('http-proxy');
-const proxy = require("./package.json").proxy;
+const cors = require('cors');
 
-app.get("/", (req, res) => {
+const port = require("./package.json").port;
+const routes = require('./routes');
+const en_us = require('./languages/en_us.json');
+
+app.use(cors());
+
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "../client/public", "index.html"));
 });
 
-// const proxyPort = 80;
-// const proxyServer = httpProxy.createServer(options);
-// let port = proxyServer.listen(proxyPort);
-// console.log('Proxy listening on port ' + proxyPort);
+app.get('/en_us', function (req, res) {
+  res.send(en_us);
+});
 
 // start express server on port 8080
-app.listen(proxy, () => {
-  console.log("server started on port 8080");
+app.listen(port, () => {
+  console.log(`server started on port ${port}`);
 });
